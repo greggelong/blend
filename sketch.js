@@ -5,7 +5,8 @@ let cnv;
 let rcolumn =0
 let rrow =0
 let lasttouch= 0;
-let binHex =[]
+let trigrams =[]
+let triGramOrder = [7,3,5,1,6,2,4,0]
 
 function preload(){
   gd =loadImage("blends.png")
@@ -22,12 +23,12 @@ function setup() {
   sd.resize(100,700)
   gd.resize(800,800)
   frameRate(1)
-  for (let i =0; i<64;i++){
-    binHex.push(binConvert(i,6))
+  for (let i =0; i<triGramOrder.length;i++){
+    trigrams.push(binConvert(triGramOrder[i],3))
 
   }
 
-  
+  print(trigrams)
 }
 
 function draw(){
@@ -37,22 +38,26 @@ function draw(){
   let column = rcolumn;//floor(random(8))
   let row = rrow;// floor(random(8))
   // rect around the top
-  let num = (column+1)*(row+1)
+  
+  let hexagram = trigrams[column].concat(trigrams[row])
   noFill()
   stroke(255,0,0)
   strokeWeight(5)
-  rect(100+(column*85),20,80,80)
+  rect(100+(rcolumn*85),20,80,80)
   
   // rect around the bottom
-  rect(10,100+(row*87),80,84)
+  rect(10,100+(rrow*87),80,84)
   
 
   // the big picture
-  let bigpic = gd.get(column*100,row*100,100,100)
+  let bigpic = gd.get(rcolumn*100,rrow*100,100,100)
   image(bigpic,200,200,500,500)
 
   // hexagram shadow
-  showGram(binHex[num-1])
+  showGram(hexagram)
+  fill(0)
+  textSize(25)
+  text(hexagram.join(''),640,750)
 
 
 }
@@ -95,10 +100,10 @@ function showGram(narray){
   let y = 170;
   for (let i =0; i<narray.length; i++){
     if (narray[i]===0){
-      rect(180,y,200,50);
-      rect(530,y,200,50);
+      rect(175,y,210,50);
+      rect(515,y,210,50);
     }else{
-      rect(180,y,550,50)
+      rect(175,y,550,50)
     }
     y+=100
   }
